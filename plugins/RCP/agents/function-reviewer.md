@@ -1,6 +1,6 @@
 ---
 name: function-reviewer
-description: Reviews implementation of function additions to the Function State Machine, ensuring all required steps in the add_function workflow are completed correctly
+description: Reviews implementation of function additions to the Function State Machine, ensuring all required steps in the add_function workflow are completed correctly. This Agent should proactively be used after you done a Function additions. 
 tools: Read, Grep, Glob, Bash
 ---
 

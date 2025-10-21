@@ -1,23 +1,13 @@
 #!/usr/bin/env bash
 # Hook script to detect changes to context_keys.h in function_statemachine.
 # When detected, reminds the developer to use the context-reviewer subagent.
+# This runs as a Stop hook, checking git status for modified files.
 
 set -euo pipefail
 
-# Read JSON from stdin
-input=$(cat)
-
-# Extract tool_name and file_path using grep and sed
-tool_name=$(echo "$input" | grep -o '"tool_name"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"tool_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-file_path=$(echo "$input" | grep -o '"file_path"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-
-# Only process Edit and Write tools
-if [[ "$tool_name" != "Edit" && "$tool_name" != "Write" ]]; then
-    exit 0
-fi
-
-# Check if the file is context_keys.h in function_statemachine
-if [[ "$file_path" == *"context_keys.h"* && "$file_path" == *"function_statemachine"* ]]; then
+# Check git status for modified files
+# Look for context_keys.h in function_statemachine among modified files
+if git status --short 2>/dev/null | grep -q "function_statemachine.*context_keys.h\|context_keys.h.*function_statemachine"; then
     cat <<'EOF'
 ╔═══════════════════════════════════════════════════════════════╗
 ║  REMINDER: context_keys.h modified                            ║

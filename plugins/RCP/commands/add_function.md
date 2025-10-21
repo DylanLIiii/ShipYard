@@ -45,7 +45,11 @@ After completing the workflow, verify all steps:
 
 ## Post-Implementation Review
 
-After completing all implementation steps, automatically invoke the **function-reviewer** subagent to verify your work:
+After completing all implementation steps, use these subagents to verify and test your work:
+
+### 1️⃣  Code Review
+
+Invoke the **function-reviewer** subagent to verify your implementation:
 
 ```
 Use the Task tool with subagent_type="function-reviewer" to review the implementation
@@ -56,3 +60,17 @@ The subagent will:
 - Check for common issues and best practice violations
 - Provide detailed feedback with specific file:line references
 - Give a final recommendation (APPROVE/REQUEST CHANGES)
+
+### 2️⃣  Test Creation
+
+Invoke the **function-test-case-writer** subagent to create tests:
+
+```
+Use the Task tool with subagent_type="function-test-case-writer" to create tests
+```
+
+The subagent will:
+- Update mock function node configuration
+- Write comprehensive test cases
+- Guide you through interactive testing
+- Follow testing_new_function.md documentation

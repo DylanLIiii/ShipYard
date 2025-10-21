@@ -1,6 +1,6 @@
 ---
 name: context-reviewer
-description: Reviews implementation of new context keys added to the Function State Machine, verifying all registration and integration steps are completed correctly
+description: Reviews implementation of new context keys added to the Function State Machine, verifying all registration and integration steps are completed correctly. This Agent should proactively be used after you done a or servaral Context keys additions. 
 tools: Read, Grep, Glob, Bash
 ---
 
