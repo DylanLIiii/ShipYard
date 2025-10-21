@@ -16,12 +16,15 @@ Work in `src/application/function_statemachine` to add new functions following t
 
 ## Required Information (Ask User First)
 
-Before proceeding, clarify the following with the user:
+Before proceeding, clarify the following or more question with the user. For each question, explain what it means. 
+
+!!! It is your responsibility to ask the user to clarify more things, and to proactively explain the meaning of each question to the user in the question. This must be done after you have read the documentation.
 
 1. **Context Keys**: What special context keys are required for this functionality?
 2. **Serialization**: Does this require custom `ToJson`, `FromJson`, and `Validation` methods, or can it use automatic macro implementation?
 3. **Blocking Configuration**: Does this need dynamic blocking configuration?
 4. **Interface Details**: What is the exact message/service interface (topic name, message type, request/response types)?
+
 
 ## Implementation Checklist
 
@@ -39,3 +42,17 @@ After completing the workflow, verify all steps:
 - Ensure all context keys are properly registered before use
 - Follow existing naming conventions in the codebase
 - Test thoroughly using the testing guide after implementation
+
+## Post-Implementation Review
+
+After completing all implementation steps, automatically invoke the **function-reviewer** subagent to verify your work:
+
+```
+Use the Task tool with subagent_type="function-reviewer" to review the implementation
+```
+
+The subagent will:
+- Verify all checklist items are completed
+- Check for common issues and best practice violations
+- Provide detailed feedback with specific file:line references
+- Give a final recommendation (APPROVE/REQUEST CHANGES)

@@ -13,7 +13,9 @@ Work in `src/application/function_statemachine` to add new context keys followin
 
 ## Required Information (Ask User First)
 
-Before proceeding, clarify the following with the user:
+Before proceeding, clarify the following with the user. For each question, explain what it means:
+
+!!! It is your responsibility to ask the user to clarify more things, and to proactively explain the meaning of each question to the user in the question. This must be done after you have read the documentation.
 
 1. **Context Key Name**: What is the name of the context key? (e.g., `vehicle_speed`, `battery_level`)
 2. **Context Key Description**: Provide a clear description of what this context key represents and its purpose in the system
@@ -21,12 +23,10 @@ Before proceeding, clarify the following with the user:
    - **Function**: Keys related to specific function execution and state
    - **DAG**: Keys related to directed acyclic graph workflow management
    - **System**: Keys related to system-level information and resources
-   
    **Important**: Each key can belong to only ONE type. Choose the most appropriate category.
 
 4. **Data Type**: What is the underlying data type? (e.g., `float`, `int32_t`, `bool`, `std::string`, custom struct)
-5. **Default Value**: What should be the initial/default value for this context key?
-6. **Update Frequency**: How often will this key be updated? (e.g., every cycle, on-demand, event-driven)
+
 
 ## Implementation Checklist
 
@@ -69,3 +69,19 @@ Adding a new module
 - ❌ Placing keys in wrong type category (Function/DAG/System)
 
 Following this guide ensures your new context keys integrate seamlessly with the existing system architecture while maintaining performance, safety, and maintainability.
+
+## Post-Implementation Review
+
+After completing all implementation steps, automatically invoke the **context-reviewer** subagent to verify your work:
+
+```
+Use the Task tool with subagent_type="context-reviewer" to review the implementation
+```
+
+The subagent will:
+- Verify all checklist items are completed
+- Check category placement (Function/DAG/System)
+- Validate type safety and thread safety
+- Review architectural compliance
+- Provide detailed feedback with specific file:line references
+- Give a final recommendation (APPROVE/REQUEST CHANGES)
