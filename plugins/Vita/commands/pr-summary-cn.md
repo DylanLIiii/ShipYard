@@ -18,7 +18,7 @@ Detailed changes:
 Code changes:
 !git diff ${ARGUMENTS:-master}...HEAD > /dev/null 2>&1
 
-Based on the above git log and diff information, generate a concise Chinese PR summary with the following structure. You can explore (use explorer agent) the codebase for more information.
+Based on the above git log and diff information, generate a concise Chinese PR summary with the following structure. You can explore (use explorer agent) the codebase for more information. 
 
 ## 变更摘要
 [用一句话概括本次PR的主要目的(可以有多个主要目的)]
