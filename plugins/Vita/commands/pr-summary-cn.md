@@ -1,7 +1,7 @@
 ---
 description: Generate concise Chinese PR summary from git changes
 allowed-tools: Bash(git:*)
-argument-hint: "[base-branch]"
+argument-hint: "[被你所处的分支合并的分支, 默认为 Master]"
 ---
 
 Base branch: ${ARGUMENTS:-master}

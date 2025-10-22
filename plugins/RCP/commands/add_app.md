@@ -1,5 +1,6 @@
 ---
 description: Add a New Context Key to the Function State Machine. Specify the context key name and description.
+argument-hint: "<你对于该应用的想法, 设计, 尽量补充已有的详细信息>"
 ---
 # Background 
 

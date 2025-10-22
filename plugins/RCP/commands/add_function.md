@@ -1,5 +1,6 @@
 ---
 description: Add a New Function Or Service. You should mention the message/service interface you have. You Context Keys Needed to Cumtomize and Registration Needed to Customized. 
+argument-hint: "<你对于该功能的想法, 设计, 尽量补充已有的详细信息>"
 ---
 
 User Input: #$ARGUMENTS to acknowledge you.

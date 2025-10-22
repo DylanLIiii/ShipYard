@@ -1,6 +1,6 @@
 ---
 description: Deep research with parallel subagents and automatic citations
-argument-hint: "<question to investigate>"
+argument-hint: "<要研究的问题和主题>"
 allowed-tools: Task, Read, Write, Edit, Grep, Glob
 category: workflow
 model: sonnet

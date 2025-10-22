@@ -1,6 +1,6 @@
 ---
 description: Deep codebase exploration with parallel explorer agents
-argument-hint: "<what to explore in the codebase>"
+argument-hint: "<你想要探索什么>"
 allowed-tools: Task, Read, Write, Edit, Grep, Glob, Bash
 category: workflow
 model: sonnet
