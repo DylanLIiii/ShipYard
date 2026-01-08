@@ -1,3 +1,2 @@
 - Plan review need more angents for different language. 
 - report bug and other need raise a issue too. with gh for current usage. Also support our repo. 
-- best-practices-research should support mutiple mcps 
