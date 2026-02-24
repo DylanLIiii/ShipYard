@@ -1,48 +1,96 @@
 # YAML Frontmatter Schema
 
-**See `.claude/skills/codify-docs/schema.yaml` for the complete schema specification.**
+**See `schema.yaml` for the complete schema specification.**
 
 ## Required Fields
 
-- **module** (string): Module name (e.g., "EmailProcessing") or "CORA" for system-wide issues
+- **module** (string): Module name (e.g., "Email Processing", "Authentication", "Data Pipeline")
 - **date** (string): ISO 8601 date (YYYY-MM-DD)
-- **problem_type** (enum): One of [build_error, test_failure, runtime_error, performance_issue, database_issue, security_issue, ui_bug, integration_issue, logic_error, developer_experience, workflow_issue, best_practice, documentation_gap]
-- **component** (enum): One of [rails_model, rails_controller, rails_view, service_object, background_job, database, frontend_stimulus, hotwire_turbo, email_processing, brief_system, assistant, authentication, payments, development_workflow, testing_framework, documentation, tooling]
-- **symptoms** (array): 1-5 specific observable symptoms
-- **root_cause** (enum): One of [missing_association, missing_include, missing_index, wrong_api, scope_issue, thread_violation, async_timing, memory_leak, config_error, logic_error, test_isolation, missing_validation, missing_permission, missing_workflow_step, inadequate_documentation, missing_tooling, incomplete_setup]
-- **resolution_type** (enum): One of [code_fix, migration, config_change, test_fix, dependency_update, environment_setup, workflow_improvement, documentation_update, tooling_addition, seed_data_update]
+- **problem_type** (enum): One of [build_error, test_failure, runtime_error, performance_issue, data_issue, security_issue, ui_bug, integration_issue, logic_error, developer_experience, workflow_issue, best_practice, documentation_gap]
 - **severity** (enum): One of [critical, high, medium, low]
+- **tags** (array): 1-8 searchable keywords (lowercase, hyphen-separated)
 
 ## Optional Fields
 
-- **rails_version** (string): Rails version in X.Y.Z format
-- **tags** (array): Searchable keywords (lowercase, hyphen-separated)
+- **language** (enum): Programming language - One of [cpp, python, rust, javascript, typescript, go, java, ruby]
+
+## Language-Specific Details
+
+The following fields are NO LONGER in the schema. Instead, document these in the body:
+
+- **component**: Specific component type (e.g., "ActiveRecord model", "struct", "class") - document in Environment section
+- **root_cause**: Technical root cause - document in "Why This Works" section
+- **resolution_type**: How the fix was applied - document in Solution section
+- **version numbers**: Language/framework versions - document in Environment section
+
+## Template Selection
+
+Based on the `language` field:
+- **cpp** → `assets/templates/cpp-resolution.md`
+- **python** → `assets/templates/python-resolution.md`
+- **rust** → `assets/templates/rust-resolution.md`
+- **javascript** → `assets/templates/javascript-resolution.md` (if created)
+- **typescript** → `assets/templates/typescript-resolution.md` (if created)
+- **go** → `assets/templates/go-resolution.md` (if created)
+- **java** → `assets/templates/java-resolution.md` (if created)
+- **ruby** → `assets/templates/ruby-resolution.md` (if created)
+- **No language field** → `assets/resolution-template.md` (generic template)
 
 ## Validation Rules
 
 1. All required fields must be present
 2. Enum fields must match allowed values exactly (case-sensitive)
-3. symptoms must be YAML array with 1-5 items
+3. tags must be YAML array with 1-8 items
 4. date must match YYYY-MM-DD format
-5. rails_version (if provided) must match X.Y.Z format
+5. language (if provided) must match one of the enum values
 6. tags should be lowercase, hyphen-separated
 
-## Example
+## Examples
 
+### C++ Example
 ```yaml
 ---
-module: Email Processing
+module: Memory Management
 date: 2025-11-12
+problem_type: runtime_error
+severity: critical
+language: cpp
+tags: [memory-leak, dangling-pointer, ownership]
+---
+```
+
+### Python Example
+```yaml
+---
+module: Data Processing Pipeline
+date: 2025-11-13
 problem_type: performance_issue
-component: rails_model
-symptoms:
-  - "N+1 query when loading email threads"
-  - "Brief generation taking >5 seconds"
-root_cause: missing_include
-rails_version: 7.1.2
-resolution_type: code_fix
 severity: high
-tags: [n-plus-one, eager-loading, performance]
+language: python
+tags: [async, concurrency, performance]
+---
+```
+
+### Rust Example
+```yaml
+---
+module: API Integration
+date: 2025-11-14
+problem_type: build_error
+severity: medium
+language: rust
+tags: [borrow-checker, lifetime, trait]
+---
+```
+
+### Generic Example (no language)
+```yaml
+---
+module: Documentation Workflow
+date: 2025-11-15
+problem_type: workflow_issue
+severity: low
+tags: [workflow, documentation, process]
 ---
 ```
 

@@ -1,15 +1,16 @@
-# CORA Documentation Schema
+# Generic Documentation Schema
 # This schema MUST be validated before writing any documentation file
+# Language-specific details should be captured in the documentation body
 
 required_fields:
   module:
     type: string
-    description: "Module/area of CORA (e.g., 'Email Processing', 'Brief System', 'Authentication')"
+    description: "Module/area of the system (e.g., 'Email Processing', 'Authentication', 'Data Pipeline')"
     examples:
       - "Email Processing"
-      - "Brief System"
-      - "Assistant"
       - "Authentication"
+      - "Data Pipeline"
+      - "User Interface"
 
   date:
     type: string
@@ -19,158 +20,99 @@ required_fields:
   problem_type:
     type: enum
     values:
-      - build_error          # Rails, bundle, compilation errors
+      - build_error          # Compilation, build system errors
       - test_failure         # Test failures, flaky tests
       - runtime_error        # Exceptions, crashes during execution
-      - performance_issue    # Slow queries, memory issues, N+1 queries
-      - database_issue       # Migration, query, schema problems
-      - security_issue       # Authentication, authorization, XSS, SQL injection
-      - ui_bug               # Frontend, Stimulus, Turbo issues
+      - performance_issue    # Slow performance, memory issues, resource leaks
+      - data_issue           # Database, serialization, data structure problems
+      - security_issue       # Authentication, authorization, injection attacks
+      - ui_bug               # Frontend, interface issues
       - integration_issue    # External service, API integration problems
-      - logic_error          # Business logic bugs
-      - developer_experience # DX issues: workflow, tooling, seed data, dev setup
-      - workflow_issue       # Development process, missing steps, unclear practices
-      - best_practice        # Documenting patterns and practices to follow
+      - logic_error          # Business logic, algorithm bugs
+      - developer_experience # DX issues: workflow, tooling, setup
+      - workflow_issue       # Process, missing steps, unclear practices
+      - best_practice        # Documenting patterns to follow
       - documentation_gap    # Missing or inadequate documentation
     description: "Primary category of the problem"
-
-  component:
-    type: enum
-    values:
-      - rails_model          # ActiveRecord models
-      - rails_controller     # ActionController
-      - rails_view           # ERB templates, ViewComponent
-      - service_object       # Custom service classes
-      - background_job       # Sidekiq, Active Job
-      - database             # PostgreSQL, migrations, schema
-      - frontend_stimulus    # Stimulus JS controllers
-      - hotwire_turbo        # Turbo Streams, Turbo Drive
-      - email_processing     # Email handling, mailers
-      - brief_system         # Brief generation, summarization
-      - assistant            # AI assistant, prompts
-      - authentication       # Devise, user auth
-      - payments             # Stripe, billing
-      - development_workflow # Dev process, seed data, tooling
-      - testing_framework    # Test setup, fixtures, VCR
-      - documentation        # README, guides, inline docs
-      - tooling              # Scripts, generators, CLI tools
-    description: "CORA component involved"
-
-  symptoms:
-    type: array[string]
-    min_items: 1
-    max_items: 5
-    description: "Observable symptoms (error messages, visual issues, crashes)"
-    examples:
-      - "N+1 query detected in brief generation"
-      - "Brief emails not appearing in summary"
-      - "Turbo Stream response returns 404"
-
-  root_cause:
-    type: enum
-    values:
-      - missing_association  # Incorrect Rails associations
-      - missing_include      # Missing eager loading (N+1)
-      - missing_index        # Database performance issue
-      - wrong_api            # Using deprecated/incorrect Rails API
-      - scope_issue          # Incorrect query scope or filtering
-      - thread_violation     # Real-time unsafe operation
-      - async_timing         # Async/background job timing
-      - memory_leak          # Memory leak or excessive allocation
-      - config_error         # Configuration or environment issue
-      - logic_error          # Algorithm/business logic bug
-      - test_isolation       # Test isolation or fixture issue
-      - missing_validation   # Missing model validation
-      - missing_permission   # Authorization check missing
-      - missing_workflow_step # Skipped or undocumented workflow step
-      - inadequate_documentation # Missing or unclear documentation
-      - missing_tooling      # Lacking helper scripts or automation
-      - incomplete_setup     # Missing seed data, fixtures, or config
-    description: "Fundamental cause of the problem"
-
-  resolution_type:
-    type: enum
-    values:
-      - code_fix             # Fixed by changing source code
-      - migration            # Fixed by database migration
-      - config_change        # Fixed by changing configuration
-      - test_fix             # Fixed by correcting tests
-      - dependency_update    # Fixed by updating gem/dependency
-      - environment_setup    # Fixed by environment configuration
-      - workflow_improvement # Improved development workflow or process
-      - documentation_update # Added or updated documentation
-      - tooling_addition     # Added helper script or automation
-      - seed_data_update     # Updated db/seeds.rb or fixtures
-    description: "Type of fix applied"
 
   severity:
     type: enum
     values:
-      - critical             # Blocks production or development (build fails, data loss)
-      - high                 # Impairs core functionality (feature broken, security issue)
-      - medium               # Affects specific feature (UI broken, performance impact)
+      - critical             # Blocks production or development
+      - high                 # Impairs core functionality
+      - medium               # Affects specific feature
       - low                  # Minor issue or edge case
     description: "Impact severity"
 
-optional_fields:
-  rails_version:
-    type: string
-    pattern: '^\d+\.\d+\.\d+$'
-    description: "Rails version where this was encountered (e.g., '7.1.0')"
-
-  related_components:
-    type: array[string]
-    description: "Other components that interact with this issue"
-
   tags:
     type: array[string]
+    min_items: 1
     max_items: 8
     description: "Searchable keywords (lowercase, hyphen-separated)"
     examples:
-      - "n-plus-one"
-      - "eager-loading"
-      - "test-isolation"
-      - "turbo-stream"
+      - "memory-leak"
+      - "race-condition"
+      - "type-error"
+      - "async-bug"
+
+optional_fields:
+  language:
+    type: enum
+    values:
+      - cpp
+      - python
+      - rust
+      - javascript
+      - typescript
+      - go
+      - java
+      - ruby
+    description: "Programming language (optional, used for template selection)"
 
 validation_rules:
-  - "module must be a valid CORA module name"
+  - "module must be a descriptive name"
   - "date must be in YYYY-MM-DD format"
   - "problem_type must match one of the enum values"
-  - "component must match one of the enum values"
-  - "symptoms must be specific and observable (not vague)"
-  - "root_cause must be the ACTUAL cause, not a symptom"
-  - "resolution_type must match one of the enum values"
   - "severity must match one of the enum values"
-  - "tags should be lowercase, hyphen-separated"
+  - "tags must be lowercase, hyphen-separated, min 1 item"
+  - "language must match one of the enum values (if provided)"
+  - "All language-specific details (component, root cause, resolution type) should be documented in the body, not in YAML"
 
-# Example valid front matter:
+# Example valid front matter (C++):
 # ---
-# module: Email Processing
+# module: Memory Management
 # date: 2025-11-12
-# problem_type: performance_issue
-# component: rails_model
-# symptoms:
-#   - N+1 query when loading email threads
-#   - Brief generation taking >5 seconds
-# root_cause: missing_include
-# rails_version: 7.1.2
-# resolution_type: code_fix
-# severity: high
-# tags: [n-plus-one, eager-loading, performance]
+# problem_type: runtime_error
+# severity: critical
+# language: cpp
+# tags: [memory-leak, dangling-pointer, ownership]
 # ---
 #
-# Example DX issue front matter:
+# Example valid front matter (Python):
 # ---
-# module: Development Workflow
+# module: Data Processing Pipeline
 # date: 2025-11-13
-# problem_type: developer_experience
-# component: development_workflow
-# symptoms:
-#   - No example data for new feature in development
-#   - Rails db:seed doesn't demonstrate new capabilities
-# root_cause: incomplete_setup
-# rails_version: 7.1.2
-# resolution_type: seed_data_update
+# problem_type: performance_issue
+# severity: high
+# language: python
+# tags: [async, concurrency, performance]
+# ---
+#
+# Example valid front matter (Rust):
+# ---
+# module: API Integration
+# date: 2025-11-14
+# problem_type: build_error
+# severity: medium
+# language: rust
+# tags: [borrow-checker, lifetime, trait]
+# ---
+#
+# Example valid front matter (generic, no language):
+# ---
+# module: Documentation Workflow
+# date: 2025-11-15
+# problem_type: workflow_issue
 # severity: low
-# tags: [seed-data, dx, workflow]
+# tags: [workflow, documentation, process]
 # ---

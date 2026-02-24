@@ -61,28 +61,28 @@ Extract from conversation history:
 
 **Required information:**
 
-- **Module name**: Which CORA module had the problem
-- **Symptom**: Observable error/behavior (exact error messages)
+- **Module name**: Which module had the problem
+- **Symptom**: Observable error/behavior (exact error messages) - goes in doc body
 - **Investigation attempts**: What didn't work and why
-- **Root cause**: Technical explanation of actual problem
-- **Solution**: What fixed it (code/config changes)
+- **Root cause**: Technical explanation of actual problem - goes in doc body
+- **Solution**: What fixed it (code/config changes) - goes in doc body
 - **Prevention**: How to avoid in future
 
 **Environment details:**
 
-- Rails version
-- Stage (0-6 or post-implementation)
-- OS version
+- Language/version (if applicable)
+- Framework (if applicable)
+- Build system (if applicable)
 - File/line references
 
-**BLOCKING REQUIREMENT:** If critical context is missing (module name, exact error, stage, or resolution steps), ask user and WAIT for response before proceeding to Step 3:
+**BLOCKING REQUIREMENT:** If critical context is missing (module name, exact error, or resolution steps), ask user and WAIT for response before proceeding to Step 3:
 
 ```
 I need a few details to document this properly:
 
 1. Which module had this issue? [ModuleName]
 2. What was the exact error message or symptom?
-3. What stage were you in? (0-6 or post-implementation)
+3. What was the solution?
 
 [Continue after user provides details]
 ```
@@ -143,7 +143,7 @@ Format: `[sanitized-symptom]-[module]-[YYYYMMDD].md`
 </step>
 
 <step number="5" required="true" depends_on="4" blocking="true">
-### Step 5: Validate YAML Schema
+### Step 5: Validate YAML Schema & Select Template
 
 **CRITICAL:** All docs require validated YAML frontmatter with enum validation.
 
@@ -160,10 +160,19 @@ Load `schema.yaml` and classify the problem against the enum values defined in [
 Errors:
 - problem_type: must be one of schema enums, got "compilation_error"
 - severity: must be one of [critical, moderate, minor], got "high"
-- symptoms: must be array with 1-5 items, got string
+- tags: must be array with 1-8 items, got empty
 
 Please provide corrected values.
 ```
+
+**Template Selection:**
+After YAML validation passes, determine which template to use:
+
+- **If `language` field is present in YAML:**
+  - Use `assets/templates/{language}-resolution.md`
+  - Supported: cpp, python, rust, javascript, typescript, go, java, ruby
+- **If `language` field is NOT present:**
+  - Use generic `assets/resolution-template.md`
 
 **GATE ENFORCEMENT:** Do NOT proceed to Step 6 (Create Documentation) until YAML frontmatter passes all validation rules defined in `schema.yaml`.
 
@@ -174,6 +183,10 @@ Please provide corrected values.
 ### Step 6: Create Documentation
 
 **Determine category from problem_type:** Use the category mapping defined in [yaml-schema.md](./references/yaml-schema.md) (lines 49-61).
+
+**Select template based on language:**
+- If `language` field present: `assets/templates/{language}-resolution.md`
+- If no `language` field: `assets/resolution-template.md`
 
 **Create documentation file:**
 
@@ -186,15 +199,16 @@ DOC_PATH="docs/solutions/${CATEGORY}/${FILENAME}"
 # Create directory if needed
 mkdir -p "docs/solutions/${CATEGORY}"
 
-# Write documentation using template from assets/resolution-template.md
+# Write documentation using selected template (from Step 5)
 # (Content populated with Step 2 context and validated YAML frontmatter)
 ```
 
 **Result:**
 - Single file in category directory
 - Enum validation ensures consistent categorization
+- Language-specific templates provide tailored structure
 
-**Create documentation:** Populate the structure from `assets/resolution-template.md` with context gathered in Step 2 and validated YAML frontmatter from Step 5.
+**Create documentation:** Populate the structure from the selected template with context gathered in Step 2 and validated YAML frontmatter from Step 5.
 </step>
 
 <step number="7" required="false" depends_on="6">
@@ -465,17 +479,14 @@ Documentation is successful when ALL of the following are true:
    module: Brief System
    date: 2025-11-10
    problem_type: performance_issue
-   component: rails_model
-   symptoms:
-     - "N+1 query when loading email threads"
-     - "Brief generation taking >5 seconds"
-   root_cause: missing_include
    severity: high
    tags: [n-plus-one, eager-loading, performance]
+   language: ruby
    ```
-   ✅ Valid
+   ✅ Valid - Uses Ruby template (language-specific)
 6. **Create documentation:**
    - `docs/solutions/performance-issues/n-plus-one-brief-generation-BriefSystem-20251110.md`
+   - Template: `assets/templates/ruby-resolution.md`
 7. **Cross-reference:** None needed (no similar issues)
 
 **Output:**
