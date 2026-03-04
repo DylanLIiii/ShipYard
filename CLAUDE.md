@@ -45,6 +45,7 @@ vita-cc-market/
 - `git-worktree/` - Manage Git worktrees for isolated parallel development
 - `skill-creator/` - Guide for creating effective skills
 - `hook-creator/` - Guide for creating Claude Code hooks
+- `batch-issues/` - Decompose plan files into actionable GitHub issues with labels and effort estimates
 
 **Hooks** (`plugins/Vengineer/hooks/`):
 - `add-language-context.py` - Automatically adds language preference (Chinese/English) to context based on user input
