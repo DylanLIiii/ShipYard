@@ -46,6 +46,7 @@ vita-cc-market/
 - `skill-creator/` - Guide for creating effective skills
 - `hook-creator/` - Guide for creating Claude Code hooks
 - `batch-issues/` - Decompose plan files into actionable GitHub issues with labels and effort estimates
+- `get-api-docs/` - Fetch current API docs via chub CLI before writing code against external libraries/services
 
 **Hooks** (`plugins/Vengineer/hooks/`):
 - `add-language-context.py` - Automatically adds language preference (Chinese/English) to context based on user input
