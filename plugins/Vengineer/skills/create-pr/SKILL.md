@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: Draft and open high-quality pull requests with clear titles, structured descriptions, and a Mermaid change diagram. Use when the user asks to create a PR, write a PR description, or prepare a branch for review.
+description: Draft and open high-quality pull requests in Chinese with clear titles, structured descriptions (including file-level changes/rationale and impact scope), and a Mermaid change diagram. Use when the user asks to create a PR, write a PR description, or prepare a branch for review.
 allowed-tools:
   - Bash
   - Read
@@ -12,131 +12,149 @@ preconditions:
 
 # Create PR Skill
 
-**Purpose**: Help the agent create polished pull requests that are easy to review and easy to merge.
+**Purpose**: 帮助 Agent 创建高质量、易于评审和合并的 Pull Request (PR)。默认使用中文编写。
 
 ## Input
 
 PR request: `${ARGUMENTS}`
 
-If the request does not specify a base branch, use the repository default branch or ask the user when the target is ambiguous.
+如果请求中未指定基准分支（base branch），请使用仓库默认分支，或在目标不明确时询问用户。
 
 ## Workflow
 
 ```mermaid
 flowchart TD
-  A[Inspect branch, commits, and diff] --> B[Find PR template or repo conventions]
-  B --> C[Draft title and description]
-  C --> D[Add Mermaid change overview]
-  D --> E[Confirm missing details]
-  E --> F[Create PR with gh pr create]
+  A[检查分支、提交和 diff] --> B[查找 PR 模板或仓库规范]
+  B --> C[起草标题和描述（中文）]
+  C --> D[添加 Mermaid 变更图]
+  D --> E[确认缺失细节]
+  E --> F[使用 gh pr create 创建 PR]
 ```
 
 ## Instructions
 
-1. **Confirm PR readiness**
-   - Make sure the branch has committed changes.
-   - Check whether the branch has been pushed; if not, push it before creating the PR.
-   - Review `git status`, commit history, and the diff against the base branch.
+1. **确认 PR 就绪状态**
+   - 确保当前分支有已提交的更改。
+   - 检查分支是否已推送；若未推送，先推送再创建 PR。
+   - 审查 `git status`、提交历史以及相对于基准分支的 diff。
 
-2. **Gather repository context**
-   - Look for PR templates or contribution guidance and follow them.
-   - Infer the main user-facing goal, implementation strategy, and verification steps from the diff.
-   - If anything important is missing, ask a short clarifying question instead of guessing.
+2. **收集仓库上下文**
+   - 寻找 PR 模板或贡献指南，并严格遵守。
+   - 从 diff 中推断主要的用户侧目标、实现策略和验证步骤。
+   - 若有重要信息缺失，请简短询问用户，不要盲目猜测。
 
-3. **Write a strong PR title**
-   - Keep it short and outcome-focused.
-   - Reuse conventional-commit style if the repo uses it.
-   - Prefer the result over the implementation detail.
+3. **编写强有力的 PR 标题**
+   - 保持简短且关注成果（Outcome-focused）。
+   - 若仓库使用 conventional-commit 规范，请复用该风格。
+   - 优先描述结果，而非实现细节。
 
-4. **Write a great PR description**
-   - Lead with the problem and the outcome.
-   - Summarize the most important changes in 3-5 bullets.
-   - Include testing or validation notes.
-   - Call out migrations, rollout concerns, screenshots, or follow-up work when relevant.
-   - Always include a Mermaid diagram section to make the change easier to scan.
+4. **编写优秀的 PR 描述（默认中文）**
+   - **问题与成果**：首先说明要解决的问题和最终达到的效果。
+   - **核心改动汇总**：用 3-5 个要点概括最重要的变更。
+   - **文件级改动点及原因**：详细说明每个主要文件的改动点，并解释**为什么要这么改**。
+   - **影响范围**：描述该改动的整体影响范围（例如：是否影响存量数据、是否有破坏性变更、性能影响等）。
+   - **测试与验证**：包含测试命令或手动验证的记录。
+   - **风险/备注**：视情况注明迁移细节、发布关注点、截图或后续工作。
+   - **Mermaid 概览**：始终包含一个 Mermaid 图表，使变更一眼可见。
 
-5. **Mermaid rules**
-   - Use a simple `flowchart TD` or `graph TD` diagram.
-   - Show the relationship between problem, main changes, and validation.
-   - Keep labels short, readable, and stable.
-   - Do not generate decorative diagrams that add no review value.
+5. **Mermaid 规则**
+   - 使用简单的 `flowchart TD` 或 `graph TD`。
+   - 展示问题、主要改动和验证之间的关系。
+   - 标签（Labels）保持简短、可读且稳定。
+   - 不要生成没有评审价值的装饰性图表。
 
-6. **Create the PR**
-   - Build the final body in markdown.
-   - Use `gh pr create` with the chosen base branch, title, and body.
-   - After creation, report the PR title, base branch, and URL.
+6. **创建 PR**
+   - 使用 Markdown 构建最终正文。
+   - 使用 `gh pr create` 并指定基准分支、标题和正文。
+   - 创建后，报告 PR 标题、基准分支和 URL。
 
-## PR Description Template
+## PR Description Template (Chinese)
 
 ````markdown
-## Summary
-- [One sentence describing the outcome]
+## 摘要
+- [用一句话描述改动成果]
 
-## What Changed
-- [Change 1]
-- [Change 2]
-- [Change 3]
+## 核心改动
+- [改动 1]
+- [改动 2]
 
-## Validation
-- [test command or manual verification]
+## 文件级改动点及原因
+| 文件路径 | 改动点 | 改动原因 |
+| :--- | :--- | :--- |
+| `path/to/file1.ts` | 修改了 XXX 逻辑 | 为了解决 YYY 导致的 ZZZ 问题 |
+| `path/to/file2.ts` | 新增了 AAA 接口 | 满足 BBB 场景下的需求 |
 
-## Mermaid Overview
+## 影响范围
+- [描述改动对系统其他部分的影响、潜在风险或需要注意的地方]
+
+## 测试验证
+- [测试命令或手动验证步骤]
+
+## Mermaid 变更概览
 ```mermaid
 flowchart TD
-  A[Problem] --> B[Change 1]
-  A --> C[Change 2]
-  B --> D[Validation]
+  A[问题/需求] --> B[改动 1]
+  A --> C[改动 2]
+  B --> D[验证结果]
   C --> D
 ```
 
-## Risks / Notes
-- [optional rollout note, migration, or follow-up]
+## 风险 / 备注
+- [可选：发布注意点、迁移脚本、后续待办等]
 ````
 
 ## Examples
 
-### Example 1: Draft only
+### Example 1: 仅起草描述
 
-Input: `write a PR description for the new skills`
+Input: `为新技能编写 PR 描述`
 
 Output:
 ````markdown
-## Summary
-- Add reusable skills for committing changes and creating PRs.
+## 摘要
+- 新增用于提交更改和创建 PR 的可复用技能。
 
-## What Changed
-- Add a `commit-changes` skill for focused conventional commits.
-- Add a `create-pr` skill for structured PR authoring.
-- Standardize both skills around verification-first workflows.
+## 核心改动
+- 新增 `commit-changes` 技能，支持规范化提交。
+- 新增 `create-pr` 技能，支持结构化编写 PR。
 
-## Validation
-- Reviewed new skill frontmatter and markdown structure manually.
+## 文件级改动点及原因
+| 文件路径 | 改动点 | 改动原因 |
+| :--- | :--- | :--- |
+| `skills/commit-changes/SKILL.md` | 初始化技能定义 | 提供自动化的规范提交能力 |
+| `skills/create-pr/SKILL.md` | 初始化技能定义 | 提供标准化的中文 PR 创建流程 |
 
-## Mermaid Overview
+## 影响范围
+- 优化了开发者的提交流程，不影响存量业务逻辑。
+
+## 测试验证
+- 手动审查了新技能的前置元数据和 Markdown 结构。
+
+## Mermaid 变更概览
 ```mermaid
 flowchart TD
-  A[Need git workflow skills] --> B[Add commit skill]
-  A --> C[Add PR skill]
-  B --> D[Cleaner commits]
-  C --> E[Better review descriptions]
+  A[需要 Git 工作流技能] --> B[新增 commit 技能]
+  A --> C[新增 PR 技能]
+  B --> D[更清晰的提交记录]
+  C --> E[更规范的评审描述]
 ```
 ````
 
-### Example 2: Create the PR
+### Example 2: 创建 PR
 
-Input: `create a PR into master`
+Input: `创建 PR 到 master 分支`
 
 Output:
 ```markdown
-Created PR
-- Title: `feat(skills): add commit and PR workflow skills`
-- Base: `master`
-- URL: [generated by gh]
+已创建 PR
+- 标题: `feat(skills): add commit and PR workflow skills`
+- 基准分支: `master`
+- URL: [由 gh 生成]
 ```
 
 ## Guidelines
 
-- Prefer reviewer readability over exhaustive detail.
-- Do not invent test results, issue links, or screenshots.
-- Keep the Mermaid diagram tightly aligned with the actual diff.
-- If the repo has a PR template, merge these sections into that template instead of replacing it.
+- 优先考虑评审者的可读性，而非事无巨细。
+- 不要捏造测试结果、问题链接或截图。
+- 确保 Mermaid 图表与实际 diff 紧密结合。
+- 若仓库已有 PR 模板，请将这些部分合并到现有模板中，而非直接替换。
