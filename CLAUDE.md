@@ -54,6 +54,7 @@ vita-cc-market/
 - `hook-creator/` - Guide for creating Claude Code hooks
 - `batch-issues/` - Decompose plan files into actionable GitHub issues with labels and effort estimates
 - `get-api-docs/` - Fetch current API docs via chub CLI before writing code against external libraries/services
+- `grill-me/` - Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
 
 **Hooks** (`plugins/Vengineer/hooks/`):
 - `add-language-context.py` - Automatically adds language preference (Chinese/English) to context based on user input

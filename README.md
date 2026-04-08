@@ -42,6 +42,7 @@ The current repo is organized around **skills-first workflows**.
 Use these skills when an idea is still fuzzy:
 
 - `clarify` — ask targeted questions to reduce ambiguity
+- `grill-me` — interview the user relentlessly about a plan or design
 - `light-plan` — turn a rough idea into a lightweight sketch
 - `turn2spec` — convert a sketch into a structured feature spec
 - `medium-plan` — produce an implementation plan
