@@ -1,6 +1,6 @@
 ---
 name: adr
-description: Capture architectural decisions as permanent, sequentially-numbered Architecture Decision Records in docs/adr/
+description: Capture architectural decisions as permanent, sequentially-numbered Architecture Decision Records in docs/adrs/
 allowed-tools:
   - Read
   - Write
@@ -45,19 +45,19 @@ List each candidate decision (one sentence each) and present via **AskUserQuesti
 ### Step 2: Determine Next ADR Number
 
 ```bash
-ls docs/adr/ 2>/dev/null | grep -E '^[0-9]{4}-' | sort | tail -1
+ls docs/adrs/ 2>/dev/null | grep -E '^[0-9]{4}-' | sort | tail -1
 ```
 
-- If `docs/adr/` is empty or absent: NNNN = `0001`
+- If `docs/adrs/` is empty or absent: NNNN = `0001`
 - Otherwise: NNNN = highest existing number + 1, zero-padded to 4 digits
 
-Create `docs/adr/` if it does not exist.
+Create `docs/adrs/` if it does not exist.
 
 ### Step 3: Write the ADR
 
 Load the template from `plugins/Vengineer/skills/reference/adr_template.md` for structural reference.
 
-Write `docs/adr/NNNN-<kebab-case-title>.md` with this structure:
+Write `docs/adrs/NNNN-<kebab-case-title>.md` with this structure:
 
 ```markdown
 ---
@@ -101,7 +101,7 @@ Accepted
 
 ### Step 4: Update Index
 
-Update (or create) `docs/adr/README.md`:
+Update (or create) `docs/adrs/README.md`:
 
 ```markdown
 # Architecture Decision Records
@@ -120,13 +120,13 @@ Offer via **AskUserQuestion**: "Add a reference to this ADR in the source plan/s
 If yes, append to the source file's YAML frontmatter:
 ```yaml
 adr-refs:
-  - docs/adr/NNNN-<title>.md
+  - docs/adrs/NNNN-<title>.md
 ```
 
 ### Step 6: Next Steps
 
 Use **AskUserQuestion**:
-> "ADR written at `docs/adr/NNNN-<title>.md`. What next?"
+> "ADR written at `docs/adrs/NNNN-<title>.md`. What next?"
 
 Options:
 1. **Record another decision** — repeat for the next candidate
