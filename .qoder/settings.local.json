@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/dylan/DylanLi/repo/vita-dev/ShipYard && git --no-pager status)",
+      "Bash(cd /Users/dylan/DylanLi/repo/vita-dev/ShipYard && git --no-pager log --oneline -5)",
+      "Bash(cd /Users/dylan/DylanLi/repo/vita-dev/ShipYard && git add -A && git commit -m \"$\\(cat <<'EOF'\nfeat\\(Vengineer\\): add fix-branch skill and remove unused skills\n\nAdd comprehensive fix-branch skill with reference docs for CI fixes,\nresolving comments, deslop, PR reviewability, and review-and-ship.\nRemove deprecated skills \\(batch-issues, check-refs, create-agent-skills,\ngit-worktree, hook-creator, pr-summary-cn\\). Bump version to 1.2.5.\nEOF\n\\)\")"
+    ]
+  }
+}
