@@ -55,7 +55,7 @@ Create `docs/adr/` if it does not exist.
 
 ### Step 3: Write the ADR
 
-Load the template from `plugins/Vengineer/skills/reference/adr_template.md` for structural reference.
+Load the template from `../reference/adr_template.md` for structural reference.
 
 Write `docs/adr/NNNN-<kebab-case-title>.md` with this structure:
 

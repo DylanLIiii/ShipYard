@@ -4,7 +4,7 @@
 
 ShipYard by DylanLi is a personal, opinionated system for turning ideas into shipped software with more clarity, better reviews, and cleaner delivery.
 
-At the core is **Vengineer**: a workflow plugin that helps you move from rough intent to production-ready change through a repeatable path:
+At the core is **Shipyard**: a workflow plugin that helps you move from rough intent to production-ready change through a repeatable path:
 
 - clarify requirements
 - sketch and spec a feature
@@ -24,12 +24,12 @@ This repository is the source for the ShipYard workflow toolkit and its Claude C
 vita-cc-market/
 ├── .claude-plugin/marketplace.json   # Marketplace metadata
 ├── plugins/
-│   ├── Vengineer/                    # Main workflow plugin
+│   ├── Shipyard/                    # Main workflow plugin
 │   │   ├── agents/                   # Research and review agents
 │   │   ├── hooks/                    # Prompt-time automation
 │   │   ├── skills/                   # Reusable workflow skills
 │   │   └── .mcp.json                 # MCP server configuration
-│   └── Vengineer-RCP/                # Legacy / compatibility plugin
+│   └── Shipyard-RCP/                # Legacy / compatibility plugin
 └── README.md
 ```
 
@@ -51,7 +51,7 @@ Use these skills when an idea is still fuzzy:
 
 ### 2. Research before implementation
 
-The `plugins/Vengineer/agents/` directory contains focused agents for grounding decisions, including:
+The `plugins/Shipyard/agents/` directory contains focused agents for grounding decisions, including:
 
 - repo analysis
 - best-practice research
@@ -59,7 +59,7 @@ The `plugins/Vengineer/agents/` directory contains focused agents for grounding 
 - git history analysis
 - spec-flow analysis
 
-Vengineer also ships MCP configuration in `plugins/Vengineer/.mcp.json` for:
+Shipyard also ships MCP configuration in `plugins/Shipyard/.mcp.json` for:
 
 - `exa`
 - `deepwiki`
@@ -90,9 +90,9 @@ Vengineer also ships MCP configuration in `plugins/Vengineer/.mcp.json` for:
 
 ## Plugin highlights
 
-### Vengineer
+### Shipyard
 
-The main plugin in `plugins/Vengineer` is the active workflow toolkit in this repository.
+The main plugin in `plugins/Shipyard` is the active workflow toolkit in this repository.
 
 Highlights:
 
@@ -102,9 +102,9 @@ Highlights:
 - prompt hook for automatic language-aware responses
 - MCP integrations for external research and docs lookup
 
-### Vengineer-RCP
+### Shipyard-RCP
 
-`plugins/Vengineer-RCP` is a smaller legacy/compatibility plugin that still contains:
+`plugins/Shipyard-RCP` is a smaller legacy/compatibility plugin that still contains:
 
 - command markdown files
 - a few review/test helper agents
@@ -112,7 +112,7 @@ Highlights:
 
 ## Hooks
 
-The Vengineer hook set lives in `plugins/Vengineer/hooks/`.
+The Shipyard hook set lives in `plugins/Shipyard/hooks/`.
 
 The current hook behavior is focused on **language context injection**:
 
@@ -120,7 +120,7 @@ The current hook behavior is focused on **language context injection**:
 - adds response-language guidance automatically
 - keeps generated code/config artifacts in English
 
-See `plugins/Vengineer/hooks/README.md` for details and testing notes.
+See `plugins/Shipyard/hooks/README.md` for details and testing notes.
 
 ## Installation
 
@@ -141,7 +141,7 @@ See `plugins/Vengineer/hooks/README.md` for details and testing notes.
 ```bash
 /plugin marketplace list
 /plugin browse
-/plugin install Vengineer@vita-cc-market
+/plugin install Shipyard@vita-cc-market
 ```
 
 If your Claude Code setup expects a different marketplace name, use the name shown by `/plugin marketplace list`.
@@ -169,9 +169,9 @@ A typical flow for a new feature looks like this:
 
 When updating the marketplace or plugin content, the most common touchpoints are:
 
-- `plugins/Vengineer/skills/*/SKILL.md`
-- `plugins/Vengineer/agents/**/*.md`
-- `plugins/Vengineer/hooks/*`
+- `plugins/Shipyard/skills/*/SKILL.md`
+- `plugins/Shipyard/agents/**/*.md`
+- `plugins/Shipyard/hooks/*`
 - `.claude-plugin/marketplace.json`
 
 There is no formal automated test suite in the repo today. Typical verification is manual:

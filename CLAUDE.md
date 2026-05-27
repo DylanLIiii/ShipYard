@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is **vita-cc-market**, a marketplace for Claude Code plugins. It contains the **Vengineer** plugin - a best practices and utility plugin for Claude Code workflows.
+This is **vita-cc-market**, a marketplace for Claude Code plugins. It contains the **Shipyard** plugin - a best practices and utility plugin for Claude Code workflows.
 
 ### Repository Structure
 
 ```
 vita-cc-market/
 ├── plugins/
-│   ├── Vengineer/              # Main BCP (Best Current Practice) plugin
+│   ├── Shipyard/              # Main BCP (Best Current Practice) plugin
 │   │   ├── agents/             # Subagent definitions
 │   │   ├── commands/           # Slash commands
 │   │   ├── skills/             # User-invocable skills
@@ -19,16 +19,16 @@ vita-cc-market/
 │   ├── TeamManager/            # Team management plugin (GitHub Projects + Linear)
 │   │   ├── skills/             # team-manage, batch-goals, post-discussion, linear-manage
 │   │   └── references/         # config-template.md (copy to config.md and fill in)
-│   └── Vengineer-RCP/          # RCP-specific plugin (legacy)
+│   └── Shipyard-RCP/          # RCP-specific plugin (legacy)
 └── .claude-plugin/
     └── marketplace.json        # Plugin marketplace metadata
 ```
 
 ## Plugin Architecture
 
-### Vengineer Plugin Components
+### Shipyard Plugin Components
 
-**Commands** (`plugins/Vengineer/commands/`):
+**Commands** (`plugins/Shipyard/commands/`):
 - `core/plan.md` - Transform feature descriptions into well-structured project plans
 - `core/work.md` - Execute work plans efficiently while maintaining quality
 - `core/review.md` - Perform exhaustive code reviews using multi-agent analysis
@@ -37,12 +37,12 @@ vita-cc-market/
 - `core/compound.md` - Document solved problems as categorized documentation
 - `utils/` - Utility commands for agent skill creation, command creation, skill healing
 
-**Agents** (`plugins/Vengineer/agents/`):
+**Agents** (`plugins/Shipyard/agents/`):
 - `core/general.md` - General-purpose exploration agent
 - `review/` - Specialized code reviewers (architecture, performance, security, patterns, etc.)
 - `research/` - Research agents (best practices, framework docs, git history, repo analysis)
 
-**Skills** (`plugins/Vengineer/skills/`):
+**Skills** (`plugins/Shipyard/skills/`):
 - `light-plan-brain-storming/` - Free-form brainstorm through dialogue → produces docs/sketches/ artifact. Use BEFORE medium-plan
 - `compound-docs/` - Capture solved problems as categorized documentation with YAML frontmatter
 - `commit/` - Analyze session changes, propose conventional commit message, execute after confirmation
@@ -56,13 +56,13 @@ vita-cc-market/
 - `get-api-docs/` - Fetch current API docs via chub CLI before writing code against external libraries/services
 - `grill-me/` - Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
 
-**Hooks** (`plugins/Vengineer/hooks/`):
+**Hooks** (`plugins/Shipyard/hooks/`):
 - `add-language-context.py` - Automatically adds language preference (Chinese/English) to context based on user input
 - `detect-solution.py` - Detects solution confirmation phrases ("that worked", "it's fixed") and auto-triggers compound-docs
 
 ## MCP Server Configuration
 
-The Vengineer plugin integrates several MCP servers (defined in `.mcp.json`):
+The Shipyard plugin integrates several MCP servers (defined in `.mcp.json`):
 - **exa** - Web search via https://mcp.exa.ai/mcp
 - **deepwiki** - GitHub repository documentation via https://mcp.deepwiki.com/sse
 - **context7** - Library documentation via https://mcp.context7.com/mcp
