@@ -36,7 +36,7 @@ Determine input type and load accordingly:
 
 Also load the spec template for reference:
 ```
-plugins/Vengineer/skills/reference/spec_template.md
+../reference/spec_template.md
 ```
 
 ## Stage 2: Analyze & Extract

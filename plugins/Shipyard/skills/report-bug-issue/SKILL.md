@@ -1,6 +1,6 @@
 ---
 name: report-bug-issue
-description: Report a bug or request a feature in the Vengineer plugin
+description: Report a bug or request a feature in the Shipyard plugin
 allowed-tools:
   - Read
   - Write
@@ -12,7 +12,7 @@ preconditions:
 
 # Report Bug Issue Skill
 
-**Purpose**: Report bugs or request features for the Vengineer plugin. This command gathers structured information and creates a GitHub issue in the VitaDynamics/vita-cc-market repository.
+**Purpose**: Report bugs or request features for the Shipyard plugin. This command gathers structured information and creates a GitHub issue in the VitaDynamics/vita-cc-market repository.
 
 ## Step 0: Verify GitHub CLI Authentication
 
@@ -75,7 +75,7 @@ Use the AskUserQuestion tool to collect the following information:
 Automatically gather:
 ```bash
 # Get plugin version
-cat ~/.claude/plugins/installed_plugins.json 2>/dev/null | grep -A5 "Vengineer" | head -10 || echo "Plugin info not found"
+cat ~/.claude/plugins/installed_plugins.json 2>/dev/null | grep -A5 "Shipyard" | head -10 || echo "Plugin info not found"
 
 # Get Claude Code version
 claude --version 2>/dev/null || echo "Claude CLI version unknown"

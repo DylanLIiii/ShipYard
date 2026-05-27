@@ -87,7 +87,7 @@ Follow the `light-plan` skill workflow:
 Follow the `turn2spec` skill workflow:
 1. Load `docs/sketches/<file>.md` as source material
 2. Extract: Feature Name, Actors, Core Actions, Constraints, Success Signals, Decisions Made, Open Questions, Data Entities
-3. Map extracted content to the spec template (`plugins/Vengineer/skills/reference/spec_template.md`)
+3. Map extracted content to the spec template (`../reference/spec_template.md`)
 4. Write spec to `docs/specs/<feature-name>.md` with frontmatter:
    ```yaml
    ---
@@ -114,19 +114,19 @@ Follow the `medium-plan` skill workflow:
 1. Run these three agents in parallel. For each: read the referenced file to get the system prompt (body after the YAML frontmatter `---`), then launch a `general-purpose` Task agent with that system prompt.
 
    **Agent 1 — Repository Research:**
-   - System prompt file: `plugins/Vengineer/agents/research/repo-research-analyst.md`
+   - System prompt file: `../../agents/research/repo-research-analyst.md`
    - User prompt: "Research repository conventions and patterns for: {feature from spec}"
 
    **Agent 2 — Best Practices Research:**
-   - System prompt file: `plugins/Vengineer/agents/research/best-practice-research.md`
+   - System prompt file: `../../agents/research/best-practice-research.md`
    - User prompt: "Research industry best practices relevant to: {feature from spec}"
 
    **Agent 3 — Framework Documentation:**
-   - System prompt file: `plugins/Vengineer/agents/research/framework-docs-researcher.md`
+   - System prompt file: `../../agents/research/framework-docs-researcher.md`
    - User prompt: "Research framework and library documentation relevant to: {feature from spec}"
 
 2. Run SpecFlow analysis — launch a `general-purpose` Task agent (prefer Claude Haiku if available) with:
-   - System prompt file: `plugins/Vengineer/agents/core/spec-flow-analyzer.md` (body after frontmatter)
+   - System prompt file: `../../agents/core/spec-flow-analyzer.md` (body after frontmatter)
    - User prompt: "{spec content}. Research findings: {research findings}"
 3. Build the plan following the spec's requirements and research findings
 4. **Include an Execution Strategy section** with:

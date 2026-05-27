@@ -491,7 +491,7 @@ Never fix bugs without a test.
 
 ## Testing Anti-Patterns
 
-When adding mocks or test utilities, read @[plugins/Vengineer/skills/tdd/testiing-anti-patterns.md](http://testing-anti-patterns.md) to avoid common pitfalls:
+When adding mocks or test utilities, read [testiing-anti-patterns.md](testiing-anti-patterns.md) to avoid common pitfalls:
 
 - Testing mock behavior instead of real behavior
 - Adding test-only methods to production classes
