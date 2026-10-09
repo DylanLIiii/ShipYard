@@ -29,6 +29,9 @@ vita-cc-market/
 │   │   ├── hooks/                    # Prompt-time automation
 │   │   ├── skills/                   # Reusable workflow skills
 │   │   └── .mcp.json                 # MCP server configuration
+│   ├── Research/                    # Scientific scaling ladder research
+│   │   ├── .claude-plugin/plugin.json # Plugin metadata
+│   │   └── skills/                   # Research workflows and templates
 │   └── Shipyard-RCP/                # Legacy / compatibility plugin
 └── README.md
 ```
@@ -102,6 +105,25 @@ Highlights:
 - prompt hook for automatic language-aware responses
 - MCP integrations for external research and docs lookup
 
+### Research
+
+The `research` plugin in `plugins/Research` supports LLM pretraining experiment design and review.
+
+- [`scientific-scaling-ladder`](plugins/Research/skills/scientific-scaling-ladder/SKILL.md) — turn small training runs into decisions about target recipe performance, compute allocation, candidate selection, and hyperparameter transfer
+- distinguish fixed-recipe prediction from decisions requiring a sufficiently tuned frontier
+- freeze evaluation and holdouts, propagate uncertainty to decisions, and validate extrapolation and production feasibility
+- use the [decision-record template](plugins/Research/skills/scientific-scaling-ladder/references/decision-record.md) for a reproducible handoff under `docs/research/`
+
+The skill condenses Jiaxuan Zou's [How to Build a Scientific Scaling Ladder](https://jiaxuanzou0714.github.io/blog/2026/how-to-build-scientific-scaling-ladder/), with links to supporting primary research. Published example sizes, thresholds, and hyperparameters are not universal defaults.
+
+Install from this repository and invoke in Claude Code:
+
+```text
+/plugin marketplace add DylanLIiii/ShipYard
+/plugin install research@Shipyard
+/research:scientific-scaling-ladder Design a ladder for comparing two pretraining recipes under a fixed compute budget.
+```
+
 ### Shipyard-RCP
 
 `plugins/Shipyard-RCP` is a smaller legacy/compatibility plugin that still contains:
@@ -170,6 +192,8 @@ A typical flow for a new feature looks like this:
 When updating the marketplace or plugin content, the most common touchpoints are:
 
 - `plugins/Shipyard/skills/*/SKILL.md`
+- `plugins/Research/skills/*/SKILL.md`
+- `plugins/Research/.claude-plugin/plugin.json`
 - `plugins/Shipyard/agents/**/*.md`
 - `plugins/Shipyard/hooks/*`
 - `.claude-plugin/marketplace.json`
