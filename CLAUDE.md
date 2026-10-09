@@ -1,173 +1,73 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for agents working in this repository.
 
 ## Repository Overview
 
-This is **vita-cc-market**, a marketplace for Claude Code plugins. It contains the **Shipyard** plugin - a best practices and utility plugin for Claude Code workflows.
+This is **ShipYard** (`DylanLIiii/ShipYard`): a Claude Code / Codex plugin marketplace with two plugins, `plugins/Shipyard` and `plugins/Research`.
 
-### Repository Structure
+Planning, test-first implementation, and diff review for the Shipyard plugin are companion skills, not files in this tree. See `README.md` for the replacement table and install commands.
 
-```
-vita-cc-market/
-├── plugins/
-│   ├── Shipyard/              # Main BCP (Best Current Practice) plugin
-│   │   ├── agents/             # Subagent definitions
-│   │   ├── commands/           # Slash commands
-│   │   ├── skills/             # User-invocable skills
-│   │   └── hooks/              # Plugin hooks
-│   ├── Research/              # Scientific research plugin (name: research)
-│   │   ├── .claude-plugin/plugin.json # Plugin metadata
-│   │   └── skills/             # scientific-scaling-ladder and its decision template
-│   ├── TeamManager/            # Team management plugin (GitHub Projects + Linear)
-│   │   ├── skills/             # team-manage, batch-goals, post-discussion, linear-manage
-│   │   └── references/         # config-template.md (copy to config.md and fill in)
-│   └── Shipyard-RCP/          # RCP-specific plugin (legacy)
-└── .claude-plugin/
-    └── marketplace.json        # Plugin marketplace metadata
+```text
+ShipYard/
+├── .claude-plugin/marketplace.json
+├── plugins/Shipyard/
+│   ├── agents/
+│   │   ├── core/spec-flow-analyzer.md
+│   │   └── research/          # repo, best-practice, framework-docs
+│   ├── skills/
+│   └── .mcp.json
+└── plugins/Research/          # plugin name: research
+    ├── .claude-plugin/plugin.json
+    └── skills/scientific-scaling-ladder/
 ```
 
-## Plugin Architecture
+## Skills in this tree
 
-### Research Plugin
+### Shipyard
+
+| Directory | name |
+|-----------|------|
+| `skills/clarify-coverage/` | `clarify-coverage` |
+| `skills/spec-from-doc/` | `spec-from-doc` |
+| `skills/ground-spec/` | `ground-spec` |
+| `skills/adr-index/` | `adr-index` |
+| `skills/ask/` | `ask` |
+| `skills/design-diagrams/` | `design-diagrams` |
+| `skills/pre-refactor-analyze/` | `pre-refactor-analyze` |
+| `skills/commit-changes/` | `commit-changes` |
+| `skills/create-pr/` | `create-pr` |
+| `skills/fix-branch/` | `fix-branch` |
+| `skills/compound-docs/` | `compound-docs` |
+
+`ground-spec` is the only Shipyard skill that launches plugin agents. It calls the scoped ids `Shipyard:research:repo-research-analyst`, `Shipyard:research:best-practice-research`, `Shipyard:research:framework-docs-researcher`, and `Shipyard:core:spec-flow-analyzer`. If the host has not registered an agent, the fallback reads `${CLAUDE_PLUGIN_ROOT}/agents/...`, not a path in the consumer repo.
+
+### Research
 
 `plugins/Research/skills/scientific-scaling-ladder/SKILL.md` designs or audits LLM pretraining scaling experiments. It distinguishes fixed-recipe predictions from tuned-frontier decisions, preserves independent holdouts, propagates uncertainty, and validates target-scale feasibility. Its linked decision template produces artifacts under `docs/research/`.
 
-Keep `plugins/Research/.claude-plugin/plugin.json` metadata consistent with its `research` entry in `.claude-plugin/marketplace.json`. Skill instructions and templates are English. Cite the source methodology and treat published numeric settings as examples requiring calibration.
+Keep `plugins/Research/.claude-plugin/plugin.json` metadata consistent with the `research` entry in `.claude-plugin/marketplace.json`. Skill instructions and templates are English. Cite the source methodology and treat published numeric settings as examples requiring calibration.
 
-### Shipyard Plugin Components
+## Companions (not in this repo)
 
-**Commands** (`plugins/Shipyard/commands/`):
-- `core/plan.md` - Transform feature descriptions into well-structured project plans
-- `core/work.md` - Execute work plans efficiently while maintaining quality
-- `core/review.md` - Perform exhaustive code reviews using multi-agent analysis
-- `core/deepen-plan.md` - Enhance plans with parallel research agents
-- `core/plan_review.md` - Get feedback from specialized reviewers
-- `core/compound.md` - Document solved problems as categorized documentation
-- `utils/` - Utility commands for agent skill creation, command creation, skill healing
+Do not vendor these. Point users at `README.md`.
 
-**Agents** (`plugins/Shipyard/agents/`):
-- `core/general.md` - General-purpose exploration agent
-- `review/` - Specialized code reviewers (architecture, performance, security, patterns, etc.)
-- `research/` - Research agents (best practices, framework docs, git history, repo analysis)
+- mattpocock: `tdd`, `to-spec`, `to-tickets`, `wayfinder`, `domain-modeling`, `grill-with-docs`, `grilling`, `/setup-matt-pocock-skills`
+- waza: `think`, `check`
 
-**Skills** (`plugins/Shipyard/skills/`):
-- `light-plan-brain-storming/` - Free-form brainstorm through dialogue → produces docs/sketches/ artifact. Use BEFORE medium-plan
-- `compound-docs/` - Capture solved problems as categorized documentation with YAML frontmatter
-- `commit/` - Analyze session changes, propose conventional commit message, execute after confirmation
-- `check-refs/` - Audit cross-reference integrity across all docs/ markdown files
-- `alphaxiv/` - Look up academic papers via AlphaXiv API, save annotated notes to docs/research/
-- `create-agent-skills/` - Create or edit Claude Code skills
-- `git-worktree/` - Manage Git worktrees for isolated parallel development
-- `skill-creator/` - Guide for creating effective skills
-- `hook-creator/` - Guide for creating Claude Code hooks
-- `batch-issues/` - Decompose plan files into actionable GitHub issues with labels and effort estimates
-- `get-api-docs/` - Fetch current API docs via chub CLI before writing code against external libraries/services
-- `grill-me/` - Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
+There is no `commands/` directory and no hooks directory in this tree.
 
-**Hooks** (`plugins/Shipyard/hooks/`):
-- `add-language-context.py` - Automatically adds language preference (Chinese/English) to context based on user input
-- `detect-solution.py` - Detects solution confirmation phrases ("that worked", "it's fixed") and auto-triggers compound-docs
+## When adding a skill
 
-## MCP Server Configuration
+1. Add `plugins/<Plugin>/skills/<name>/SKILL.md`.
+2. Frontmatter: `name`, `description`, and, when the skill uses tools, `allowed-tools` plus `preconditions`.
+3. If a Shipyard skill overlaps a companion skill, make it a handoff or a short add-on. Do not paste the companion's workflow in.
+4. Update the skill tables in `README.md` and in this file.
 
-The Shipyard plugin integrates several MCP servers (defined in `.mcp.json`):
-- **exa** - Web search via https://mcp.exa.ai/mcp
-- **deepwiki** - GitHub repository documentation via https://mcp.deepwiki.com/sse
-- **context7** - Library documentation via https://mcp.context7.com/mcp
+## Marketplace
 
-## Key Workflow Commands
-
-### Planning Phase
-Use `/core:plan` to create structured project plans:
-- Runs parallel research agents (repo, best practices, framework docs)
-- Performs SpecFlow analysis for gap identification
-- Supports MINIMAL/MORE/A LOT detail levels
-- Outputs to `plans/<issue_title>.md`
-
-### Working Phase
-Use `/core:work` to execute plans:
-- Reads work documents and clarifies requirements
-- Supports worktree-based parallel development
-- Implements following existing patterns
-- Runs tests continuously
-- Creates commits and PRs with screenshots for UI changes
-
-### Review Phase
-Use `/core:review` for comprehensive code reviews:
-- Runs 13+ parallel reviewer agents
-- Creates structured todos in `todos/` directory using file-todos skill
-- Supports P1/P2/P3 severity classification
-- Optionally runs Playwright/Xcode tests
-
-### Documentation
-Use `/core:compound` to document solved problems:
-- Auto-triggers on confirmation phrases ("that worked", "it's fixed")
-- Creates categorized docs with YAML frontmatter in `docs/solutions/`
-- Validates against YAML schema
-- Supports cross-references and critical pattern detection
-
-## Language Context Hook
-
-The plugin includes an automatic language detection hook that:
-- Detects Chinese vs English input (>30% Chinese characters)
-- Adds appropriate language instructions to Claude's context
-- Ensures user-facing content matches input language
-- Keeps code/config files in English
-
-## File-Based Todo System
-
-Uses `file-todos` skill for structured issue tracking:
-- Location: `todos/` directory
-- Format: `{issue_id}-{status}-{priority}-{description}.md`
-- Status values: `pending`, `ready`, `complete`
-- Priority values: `p1` (critical), `p2` (important), `p3` (nice-to-have)
-- YAML frontmatter with tags, dependencies, and metadata
-
-## Development Guidelines
-
-### When Adding New Commands
-
-1. Create markdown file in appropriate `commands/` subdirectory
-2. Include YAML frontmatter: `name`, `description`, `argument-hint`
-3. Follow existing command structure (see `core/plan.md` as reference)
-4. Use parallel Task agents for multi-step workflows
-5. Include post-generation options with AskUserQuestion tool
-
-### When Adding New Agents
-
-1. Create markdown file in appropriate `agents/` subdirectory
-2. Define clear purpose and expertise areas
-3. Specify allowed tools and preconditions
-4. Include integration protocols and handoff expectations
-
-### When Adding New Skills
-
-1. Use `/utils/create-agent-skill` command for structure
-2. Create SKILL.md with proper frontmatter
-3. Include allowed-tools, preconditions, and workflow steps
-4. Add decision gates where user interaction is required
-5. Test with `/utils/heal-skill` for validation
-
-## Git Workflow
-
-The repository uses multiple remotes:
-- `origin` - git@codeup.aliyun.com:vbot/VitaCore/vita-cc-market.git
-- `main` - https://github.com/VitaDynamics/vita-cc-market.git
-
-Use git-worktree skill for parallel development without cluttering main branch.
-
-## Marketplace Configuration
-
-Plugin metadata is in `.claude-plugin/marketplace.json`:
-- Plugin name, version, description
-- Author contact information
-- Source directory mapping
+`.claude-plugin/marketplace.json` holds each plugin name, version, description, and `source` directory.
 
 ## Testing
 
-No automated test suite exists. Manual testing involves:
-- Invoking commands with various inputs
-- Verifying agent outputs
-- Testing hooks with different language inputs
-- Validating skill YAML frontmatter
+No automated suite. After a skill or docs edit, confirm the replacement table in `README.md` is the only place that names a Shipyard skill this repo no longer ships.

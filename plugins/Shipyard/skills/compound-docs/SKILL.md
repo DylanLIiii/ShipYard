@@ -340,9 +340,9 @@ User selects this when the solution represents the start of a new learning domai
 
 Action:
 1. Prompt: "What should the new skill be called? (e.g., stripe-billing, email-processing)"
-2. Run `python3 .claude/skills/skill-creator/scripts/init_skill.py [skill-name]`
-3. Create initial reference files with this solution as first example
-4. Confirm: "✓ Created new [skill-name] skill with this solution as first example"
+2. Write the new skill by hand in the user's project. Add `SKILL.md` with `name` and `description` frontmatter and a short workflow that points at the solution doc just written.
+3. Create that skill's first reference file with this solution as the example.
+4. Confirm the path of the new skill.
 
 **Option 6: View documentation**
 

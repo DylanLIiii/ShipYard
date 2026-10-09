@@ -1,113 +1,134 @@
 # ShipYard by DylanLi
 
-**The AI-native engineering workflow system for Claude Code.**
+**Delivery skills for Claude Code and Codex, with planning and review delegated to maintained companions.**
 
-ShipYard by DylanLi is a personal, opinionated system for turning ideas into shipped software with more clarity, better reviews, and cleaner delivery.
+ShipYard used to carry its own path from sketch to spec to plan to review. That path now lives in two skill sets that are actively maintained elsewhere. This repo keeps the delivery skills, plus a few short add-ons that those companions do not cover.
 
-At the core is **Shipyard**: a workflow plugin that helps you move from rough intent to production-ready change through a repeatable path:
+## Companions
 
-- clarify requirements
-- sketch and spec a feature
-- build an implementation plan
-- deepen the plan with research
-- execute the work
-- review the diff
-- commit changes cleanly
-- open a structured PR
-- capture long-term docs and ADRs
+Install both next to ShipYard. Do not copy their skill files into this repo.
 
-## What this repo contains
+### mattpocock/skills
 
-This repository is the source for the ShipYard workflow toolkit and its Claude Code plugin assets.
+Engineering skills, including `tdd`, `to-spec`, `to-tickets`, `wayfinder`, `domain-modeling` (with `ADR-FORMAT.md`), `grill-with-docs`, and `grilling`. Several of them expect an issue tracker and a `GLOSSARY.md`. Run `/setup-matt-pocock-skills` once per repo before the first `to-spec` or `to-tickets`.
 
-```text
-vita-cc-market/
-├── .claude-plugin/marketplace.json   # Marketplace metadata
-├── plugins/
-│   ├── Shipyard/                    # Main workflow plugin
-│   │   ├── agents/                   # Research and review agents
-│   │   ├── hooks/                    # Prompt-time automation
-│   │   ├── skills/                   # Reusable workflow skills
-│   │   └── .mcp.json                 # MCP server configuration
-│   ├── Research/                    # Scientific scaling ladder research
-│   │   ├── .claude-plugin/plugin.json # Plugin metadata
-│   │   └── skills/                   # Research workflows and templates
-│   └── Shipyard-RCP/                # Legacy / compatibility plugin
-└── README.md
+Claude Code:
+
+```bash
+claude plugin install mattpocock-skills@claude-plugins-official
 ```
 
-## Core workflow
+Codex:
 
-The current repo is organized around **skills-first workflows**.
+```bash
+codex plugin marketplace add mattpocock/skills
+codex plugin add mattpocock-skills@mattpocock
+```
 
-### 1. Clarify and shape the work
+Source: [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering). Both sets are MIT; ShipYard documents them as companions instead of vendoring them.
 
-Use these skills when an idea is still fuzzy:
+### tw93/waza
 
-- `clarify` — ask targeted questions to reduce ambiguity
-- `grill-me` — interview the user relentlessly about a plan or design
-- `light-plan` — turn a rough idea into a lightweight sketch
-- `turn2spec` — convert a sketch into a structured feature spec
-- `medium-plan` — produce an implementation plan
-- `deepen-plan` — enrich a plan with parallel research
-- `arch-flow` — orchestrate the full pipeline from sketch → spec → plan → ADR
+`think` for shaping a rough idea, `check` for reviewing a diff.
 
-### 2. Research before implementation
+```bash
+npx skills add tw93/Waza -a claude-code codex cursor -g -y
+```
 
-The `plugins/Shipyard/agents/` directory contains focused agents for grounding decisions, including:
+Or as a host plugin (namespaced `/waza:check`):
 
-- repo analysis
-- best-practice research
-- framework documentation research
-- git history analysis
-- spec-flow analysis
+```bash
+/plugin marketplace add tw93/Waza
+/plugin install waza@waza
+```
 
-Shipyard also ships MCP configuration in `plugins/Shipyard/.mcp.json` for:
+Source: [tw93/waza](https://github.com/tw93/waza).
 
-- `exa`
-- `deepwiki`
-- `context7`
+## What replaced what
 
-### 3. Execute the plan
+| Removed ShipYard skill | Replacement |
+|------------------------|-------------|
+| `tdd` (frontmatter name `test-driven-development`) | mattpocock `tdd` |
+| `review` | waza `check` |
+| `light-plan` (frontmatter name `light-plan-brain-storming`) | waza `think`. Use mattpocock `wayfinder` when the effort is too big for one session. |
+| `clarify` | mattpocock `grilling` / `grill-with-docs`. ShipYard `clarify-coverage` keeps the bounded scan. |
+| `turn2spec` | mattpocock `to-spec`. ShipYard `spec-from-doc` keeps the design-doc handoff. |
+| `medium-plan` | `to-spec`, then `to-tickets`. ShipYard `ground-spec` keeps repo research and spec-flow. |
+| `arch-flow` | The flow in [Suggested usage](#suggested-usage). No orchestrator skill. |
+| `adr` | mattpocock `domain-modeling`. ShipYard `adr-index` keeps the candidate list, index, and back-links. |
+| `deepen-plan` | Removed. See [Why two plan skills were not adapted](#why-two-plan-skills-were-not-adapted). |
+| `plan_review` | Removed. See [Why two plan skills were not adapted](#why-two-plan-skills-were-not-adapted). |
 
-- `work` — execute a plan with incremental implementation and verification
-- `git-worktree` — create isolated worktrees for parallel development
-- `ask` — explore the codebase with parallel investigation
-- `get-api-docs` — fetch current API documentation before coding against external dependencies
+`batch-issues` and `git-worktree` were already missing. The rows above that used to call them are gone. Tracker tickets come from `to-tickets`.
 
-### 4. Review and finish the change
+## What we kept from the old pipeline
 
-- `review` — run a structured, multi-agent code review workflow
-- `plan_review` — review implementation plans before coding
-- `resolve-todos` — work through generated TODOs
-- `commit-changes` — turn a diff into clean, focused commits
-- `create-pr` — draft and open a structured pull request
-- `pr-summary-cn` — generate a concise Chinese PR summary
+| Unique behavior | Where it lives now |
+|-----------------|--------------------|
+| Eight-category coverage scan, at most five questions, Clarifications section written back onto the draft | `clarify-coverage` |
+| Existing design doc or ADR → in-scope behavior, non-goals, success criteria, edge cases, at most three gap questions | `spec-from-doc` (a brief under `docs/spec-briefs/`, then `to-spec` publishes) |
+| Repo, best-practice, and framework research agents, plus spec-flow gap analysis | `ground-spec`, launching the plugin agents under `agents/` |
+| Phase table and `[PARALLEL]` tags | Not kept. `to-tickets` blocking edges are the parallel-work model. |
+| Decision candidates, `docs/adr/README.md`, back-links onto the source | `adr-index` |
+| Long ADR template and full spec template | Not kept. ADR prose follows `domain-modeling` `ADR-FORMAT.md`. Spec prose follows `to-spec`. |
 
-### 5. Preserve knowledge
+## Why two plan skills were not adapted
 
-- `adr` — record architecture decisions in ADR format
-- `compound-docs` — save solved problems as reusable documentation
-- `batch-issues` — decompose a plan into actionable issues
-- `report-bug-issue` — report plugin issues or feature requests
+The last two rows of the replacement table were not turned into add-ons. Both assumed a local plan file and a roster of reviewers or researchers that was never wired to agent files. One named twelve reviewers while six prompt files existed, and the review row in the table did not load those files by path. The other named twelve research roles. The prompts that exist are the three research agents `ground-spec` launches, plus spec-flow.
 
-## Plugin highlights
+Adapting either onto tracker issues would duplicate companions that already exist:
 
-### Shipyard
+- Stress-testing a design is `grilling` / `grill-with-docs`.
+- Research on a large, foggy effort is `wayfinder` research tickets.
+- Reviewing a diff is waza `check`.
 
-The main plugin in `plugins/Shipyard` is the active workflow toolkit in this repository.
+They were removed. Research backed by real prompt files moved into `ground-spec`, which runs before `to-spec` rather than after a local plan file.
 
-Highlights:
+## Skills in this plugin
 
-- end-to-end planning and delivery workflow
-- reusable skills for planning, implementation, review, commit, and PR creation
-- specialized research and review agents
-- prompt hook for automatic language-aware responses
-- MCP integrations for external research and docs lookup
+| Skill | Role |
+|-------|------|
+| `clarify-coverage` | Bounded coverage pass; writes Clarifications back |
+| `spec-from-doc` | Design doc or ADR → spec brief for `to-spec` |
+| `ground-spec` | Repo research and spec-flow note before `to-spec` |
+| `adr-index` | Decision candidates, ADR index, back-links |
+| `ask` | Parallel codebase questions |
+| `design-diagrams` | Architecture and process diagrams |
+| `pre-refactor-analyze` | Pre-migration semantic analysis |
+| `commit-changes` | Conventional commits from the session diff |
+| `create-pr` | Open a structured pull request |
+| `fix-branch` | CI, review comments, conflicts, deslop |
+| `compound-docs` | Solved problems as categorized docs |
 
-### Research
+Agents still shipped, because `ground-spec` loads them:
 
-The `research` plugin in `plugins/Research` supports LLM pretraining experiment design and review.
+- `agents/research/repo-research-analyst.md`
+- `agents/research/best-practice-research.md`
+- `agents/research/framework-docs-researcher.md`
+- `agents/core/spec-flow-analyzer.md`
+
+Removed because nothing remaining loads them: `agents/core/general.md`, `agents/research/git-history-analyzer.md`, and every file under `agents/review/` (`architecture-strategist`, `performance-oracle`, `code-simplicity-reviewer`, `pattern-recognition-specialist`, `bobo-python-reviewer`, `bobo-cpp-reviewer`).
+
+## Suggested usage
+
+1. Rough idea in one session: waza `think`. Bigger than one session: mattpocock `wayfinder`.
+2. Sharpen terms and decisions: `grill-with-docs` (or `grilling`).
+3. Optional bounded pass: `clarify-coverage`.
+4. Starting from a design doc or ADR already on disk: `spec-from-doc`.
+5. Optional grounding: `ground-spec`.
+6. Publish the spec: `to-spec`.
+7. Slice the work: `to-tickets`.
+8. Record hard-to-reverse decisions: `domain-modeling`, then `adr-index`.
+9. Implement with mattpocock `tdd`.
+10. Review the diff with waza `check`.
+11. `commit-changes`, `create-pr`, and `fix-branch` as the branch moves.
+12. `compound-docs` when a solved problem should outlive the session.
+
+`/setup-matt-pocock-skills` has to run once on the target repo before step 6.
+
+## Research plugin
+
+The `research` plugin in `plugins/Research` supports LLM pretraining experiment design and review. It is separate from the Shipyard planning add-ons.
 
 - [`scientific-scaling-ladder`](plugins/Research/skills/scientific-scaling-ladder/SKILL.md) — turn small training runs into decisions about target recipe performance, compute allocation, candidate selection, and hyperparameter transfer
 - distinguish fixed-recipe prediction from decisions requiring a sufficiently tuned frontier
@@ -124,86 +145,52 @@ Install from this repository and invoke in Claude Code:
 /research:scientific-scaling-ladder Design a ladder for comparing two pretraining recipes under a fixed compute budget.
 ```
 
-### Shipyard-RCP
+## What this repo contains
 
-`plugins/Shipyard-RCP` is a smaller legacy/compatibility plugin that still contains:
+```text
+ShipYard/
+├── .claude-plugin/marketplace.json
+├── plugins/Shipyard/
+│   ├── agents/          # research + spec-flow prompts used by ground-spec
+│   ├── skills/          # delivery skills and the four planning add-ons
+│   └── .mcp.json
+├── plugins/Research/    # plugin name: research
+│   ├── .claude-plugin/plugin.json
+│   └── skills/scientific-scaling-ladder/
+├── CLAUDE.md
+└── README.md
+```
 
-- command markdown files
-- a few review/test helper agents
-- shell scripts and hook configuration
-
-## Hooks
-
-The Shipyard hook set lives in `plugins/Shipyard/hooks/`.
-
-The current hook behavior is focused on **language context injection**:
-
-- detects whether user input is primarily Chinese or English
-- adds response-language guidance automatically
-- keeps generated code/config artifacts in English
-
-See `plugins/Shipyard/hooks/README.md` for details and testing notes.
+MCP servers configured in `plugins/Shipyard/.mcp.json`: Context7, Exa, Devin, Linear, Morph.
 
 ## Installation
 
-### Add this marketplace from GitHub
-
 ```bash
-/plugin marketplace add VitaDynamics/vita-cc-market
+/plugin marketplace add DylanLIiii/ShipYard
+/plugin install Shipyard@Shipyard
 ```
 
-### Add this marketplace from Git URL
-
-```bash
-/plugin marketplace add git@codeup.aliyun.com:vbot/VitaCore/vita-cc-market.git
-```
-
-### Install the plugin in Claude Code
-
-```bash
-/plugin marketplace list
-/plugin browse
-/plugin install Shipyard@vita-cc-market
-```
-
-If your Claude Code setup expects a different marketplace name, use the name shown by `/plugin marketplace list`.
-
-## Suggested usage flow
-
-A typical flow for a new feature looks like this:
-
-1. Start with `clarify` if requirements are ambiguous.
-2. Run `arch-flow` to go from sketch to spec to plan and ADRs.
-3. Use `work` to implement from the plan.
-4. Run `review` before merging.
-5. Use `commit-changes` to create clean commits.
-6. Use `create-pr` to open a polished pull request.
-7. Capture durable learnings with `compound-docs` or `adr`.
+Install the companions in [Companions](#companions) as well. ShipYard's planning add-ons hand off to them and will not recreate their workflows.
 
 ## Repository conventions
 
-- user-facing workflow docs can follow the user language
-- skills, agents, code, hooks, and config stay in English
-- planning artifacts are expected under `docs/` when generated by the workflow
-- plugin marketplace metadata lives in `.claude-plugin/marketplace.json`
+- User-facing workflow docs follow the user's language.
+- Skill and agent files stay in the language they were written in. Chinese skills stay Chinese.
+- Spec briefs written by `spec-from-doc` and `ground-spec` go under `docs/spec-briefs/` in the target repo.
+- ADRs written by `domain-modeling` stay in that repo's `docs/adr/`. `adr-index` only maintains `docs/adr/README.md` and back-links.
+- Marketplace metadata is `.claude-plugin/marketplace.json`.
 
 ## Developing in this repo
 
-When updating the marketplace or plugin content, the most common touchpoints are:
+Touchpoints:
 
 - `plugins/Shipyard/skills/*/SKILL.md`
 - `plugins/Research/skills/*/SKILL.md`
 - `plugins/Research/.claude-plugin/plugin.json`
 - `plugins/Shipyard/agents/**/*.md`
-- `plugins/Shipyard/hooks/*`
 - `.claude-plugin/marketplace.json`
 
-There is no formal automated test suite in the repo today. Typical verification is manual:
-
-- inspect skill frontmatter and structure
-- validate hook configuration
-- test hook behavior with sample prompt payloads
-- manually exercise the workflow in Claude Code
+There is no automated test suite. Check skill frontmatter, then search the tree for removed skill names before shipping a docs or skill change.
 
 ## License
 
