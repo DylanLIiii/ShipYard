@@ -16,6 +16,9 @@ vita-cc-market/
 │   │   ├── commands/           # Slash commands
 │   │   ├── skills/             # User-invocable skills
 │   │   └── hooks/              # Plugin hooks
+│   ├── Research/              # Scientific research plugin (name: research)
+│   │   ├── .claude-plugin/plugin.json # Plugin metadata
+│   │   └── skills/             # scientific-scaling-ladder and its decision template
 │   ├── TeamManager/            # Team management plugin (GitHub Projects + Linear)
 │   │   ├── skills/             # team-manage, batch-goals, post-discussion, linear-manage
 │   │   └── references/         # config-template.md (copy to config.md and fill in)
@@ -25,6 +28,12 @@ vita-cc-market/
 ```
 
 ## Plugin Architecture
+
+### Research Plugin
+
+`plugins/Research/skills/scientific-scaling-ladder/SKILL.md` designs or audits LLM pretraining scaling experiments. It distinguishes fixed-recipe predictions from tuned-frontier decisions, preserves independent holdouts, propagates uncertainty, and validates target-scale feasibility. Its linked decision template produces artifacts under `docs/research/`.
+
+Keep `plugins/Research/.claude-plugin/plugin.json` metadata consistent with its `research` entry in `.claude-plugin/marketplace.json`. Skill instructions and templates are English. Cite the source methodology and treat published numeric settings as examples requiring calibration.
 
 ### Shipyard Plugin Components
 
