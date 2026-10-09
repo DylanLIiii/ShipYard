@@ -8,6 +8,7 @@ allowed-tools:
   - Edit
   - Grep
   - Glob
+  - Bash
 preconditions:
   - A feature draft is available (conversation, spec brief, or tracker issue)
 ---
@@ -16,9 +17,9 @@ preconditions:
 
 **Purpose**: Close coverage holes with a short, structured pass, then persist the answers on the draft.
 
-This is not an open interview. Relentless design-tree questioning belongs to mattpocock `grilling` (and `grill-with-docs` when terms or ADRs should be captured as you go). If the idea is still a pile of unsettled branches, stop and tell the user to run those skills first. Do not reimplement them.
+This is not an open interview. Relentless design-tree questioning belongs to mattpocock `grilling` (and `grill-with-docs` when terms or ADRs should be captured as you go). Do not reimplement that interview.
 
-If `grilling` is not installed, stop and point at the ShipYard README Companions section.
+Scan a formed draft whether or not `grilling` is installed. A spec brief, a loaded tracker issue, or a conversation that already states the feature is formed enough. Mention `grilling` only when the draft is still a pile of unsettled branches. If that skill is absent, point at the ShipYard README Companions section and still scan whatever is already decided. Never stop this pass solely because `grilling` is not installed.
 
 ## Input
 
@@ -27,6 +28,13 @@ $ARGUMENTS
 ```
 
 Accept a markdown path, a tracker issue reference, or the current conversation. If empty, ask which draft to scan. Do not start without a draft.
+
+## Load the draft
+
+- **Local markdown path** — Read the file.
+- **Tracker issue** (number, URL, or key) — Read `docs/agents/issue-tracker.md` when it exists and follow its view operation. Use Bash when that operation is a shell command.
+- **Issue body not loaded** (no tracker doc, the command failed, or the host has no tracker tool) — ask the user to paste the issue body. Do not scan an unread reference as if it were empty.
+- **Conversation only** — use the current conversation.
 
 ## Stage 1: Coverage scan
 

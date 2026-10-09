@@ -33,22 +33,33 @@ When `GLOSSARY.md` or `docs/adr/` exists, include those paths in every agent pro
 
 ## Stage 1: Research, in parallel
 
-For each agent, Read the prompt file and use the body after the YAML frontmatter as the Task system prompt. Launch all three `general-purpose` Task agents in the same turn.
+Launch the plugin's own agents. Their registered definitions supply the system prompt and tools. Do not spawn a generic worker and paste the prompt in as ordinary task text.
 
-| Agent | Prompt file | User prompt |
-|-------|-------------|-------------|
-| Repository | `plugins/Shipyard/agents/research/repo-research-analyst.md` | Research repository conventions and patterns for: {feature}. Cite file paths. |
-| Best practices | `plugins/Shipyard/agents/research/best-practice-research.md` | Research industry practices relevant to: {feature}. Cite URLs. |
-| Framework docs | `plugins/Shipyard/agents/research/framework-docs-researcher.md` | Research framework and library docs relevant to: {feature}. Note versions in this repo. |
+Launch all three in the same turn. Pass only the user prompt.
+
+| Agent | Scoped id | User prompt |
+|-------|-----------|-------------|
+| Repository | `Shipyard:research:repo-research-analyst` | Research repository conventions and patterns for: {feature}. Cite file paths. |
+| Best practices | `Shipyard:research:best-practice-research` | Research industry practices relevant to: {feature}. Cite URLs. |
+| Framework docs | `Shipyard:research:framework-docs-researcher` | Research framework and library docs relevant to: {feature}. Note versions in this repo. |
+
+The scoped id is the installed plugin name plus the path under `agents/`. On Claude Code the plugin name is `Shipyard`. If the host lists the best-practice agent under its frontmatter name instead of the filename, that id is `Shipyard:research:best-practices-researcher`.
+
+If a scoped agent is not registered, do not invent a `general-purpose` pass as the first choice. Read that agent's file from the installed plugin and use the body after the YAML frontmatter as the worker's system prompt:
+
+`${CLAUDE_PLUGIN_ROOT}/agents/research/repo-research-analyst.md`
+`${CLAUDE_PLUGIN_ROOT}/agents/research/best-practice-research.md`
+`${CLAUDE_PLUGIN_ROOT}/agents/research/framework-docs-researcher.md`
+
+Claude Code substitutes `${CLAUDE_PLUGIN_ROOT}` when it loads this skill. That directory is the plugin install root, the parent of `skills/` and `agents/`. Never resolve these files from the consumer repository's `plugins/Shipyard/agents/`. If the variable is still unsubstituted or the file is missing, stop and say the plugin agents could not be found.
 
 Collect file paths, external URLs, and conventions from `CLAUDE.md` or `AGENTS.md`. Discard findings that name no source.
 
 ## Stage 2: Spec-flow gaps
 
-Launch one `general-purpose` Task agent. Prefer a fast model when the host offers one.
+Launch `Shipyard:core:spec-flow-analyzer` with the feature plus the research findings. Prefer a fast model when the host offers one.
 
-- System prompt: body of `plugins/Shipyard/agents/core/spec-flow-analyzer.md` after the frontmatter
-- User prompt: the feature plus the research findings
+Same fallback as Stage 1, and only when that agent is not registered: read `${CLAUDE_PLUGIN_ROOT}/agents/core/spec-flow-analyzer.md` and use the body after the frontmatter as the system prompt. Do not look for that file in the consumer repository.
 
 Keep the agent's flow overview, permutation matrix, and prioritized gaps. Do not interview the user from this list. Recording the questions is the point; answering them is `clarify-coverage` or `grilling`.
 

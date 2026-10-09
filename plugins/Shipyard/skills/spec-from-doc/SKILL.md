@@ -38,6 +38,7 @@ A file path, or pasted text. If empty, ask for a path or paste. Do not proceed w
 |---------|----------|
 | **Feature name** | Title or dominant topic, 2–5 words |
 | **Actors** | Users, admins, systems |
+| **In-scope behavior** | What the feature does: user goals, capabilities, flows, and functional requirements that are in scope |
 | **Non-goals** | "out of scope", "not included", "future work", "does not cover" |
 | **Success signals** | Goals, KPIs, "done when" |
 | **Edge cases** | Failure modes, boundaries, unresolved scenarios |
@@ -46,6 +47,7 @@ A file path, or pasted text. If empty, ask for a path or paste. Do not proceed w
 Rules:
 
 - Never invent a requirement that the source does not support. Flag the gap instead.
+- Every in-scope behavior you can ground in the source goes in the brief. A requirement that is not a success metric still counts. Do not leave it only in the source file.
 - If the source states no non-goals, derive at most two from clearly adjacent scope and mark each `(derived)`.
 - If the source states no measurable outcome, write "Source stated no measurable success criterion." Do not invent a metric.
 - Mark inferred edge cases `(inferred)`.
@@ -74,6 +76,12 @@ status: handoff
 Handoff for mattpocock `to-spec`. This file is not the published spec.
 
 ## Actors
+
+- ...
+
+## In-scope behavior
+
+Grounded, implementation-agnostic requirements. These are not success criteria.
 
 - ...
 
@@ -107,10 +115,11 @@ If the source file is under `docs/` and has YAML frontmatter, add `spec-brief: d
 
 ## Stage 5: Hand off
 
-Tell the user the brief path, how many non-goals, success criteria, and edge cases it holds, and which items were derived or inferred.
+Tell the user the brief path, how many in-scope behaviors, non-goals, success criteria, and edge cases it holds, and which items were derived or inferred. The `source` field is the check: if a behavior from the source is missing here, read the source again before handing off.
 
 Ask them to run `to-spec` with this brief in context, and to place:
 
+- In-scope behavior → Solution and User Stories. Do not drop these because they are not measurable success criteria.
 - Non-goals → Out of Scope
 - Success criteria and edge cases → Further Notes
 

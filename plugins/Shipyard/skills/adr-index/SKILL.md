@@ -7,6 +7,7 @@ allowed-tools:
   - Edit
   - Glob
   - AskUserQuestion
+  - Bash
 preconditions:
   - A spec, spec brief, tracker issue, or existing docs/adr/ files
 ---
@@ -24,6 +25,13 @@ $ARGUMENTS
 ```
 
 A local markdown path, a tracker issue, "index only", or empty. If empty, ask whether to scan a draft or only refresh the index.
+
+## Load a tracker issue
+
+Do this before Step 1 when the input is an issue number, URL, or key rather than a local file.
+
+- Read `docs/agents/issue-tracker.md` when it exists and follow its view operation. Use Bash when that operation is a shell command.
+- If the issue body cannot be loaded, ask the user to paste it. Do not scan an unread reference, and do not guess a tracker CLI.
 
 ## Step 1: Candidates
 

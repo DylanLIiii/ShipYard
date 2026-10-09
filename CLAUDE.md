@@ -40,7 +40,7 @@ ShipYard/
 | `skills/fix-branch/` | `fix-branch` |
 | `skills/compound-docs/` | `compound-docs` |
 
-`ground-spec` is the only Shipyard skill that loads agent files. It reads the body after the YAML frontmatter and passes that as the Task system prompt.
+`ground-spec` is the only Shipyard skill that launches plugin agents. It calls the scoped ids `Shipyard:research:repo-research-analyst`, `Shipyard:research:best-practice-research`, `Shipyard:research:framework-docs-researcher`, and `Shipyard:core:spec-flow-analyzer`. If the host has not registered an agent, the fallback reads `${CLAUDE_PLUGIN_ROOT}/agents/...`, not a path in the consumer repo.
 
 ### Research
 

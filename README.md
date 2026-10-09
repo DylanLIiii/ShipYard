@@ -56,33 +56,33 @@ Source: [tw93/waza](https://github.com/tw93/waza).
 | `medium-plan` | `to-spec`, then `to-tickets`. ShipYard `ground-spec` keeps repo research and spec-flow. |
 | `arch-flow` | The flow in [Suggested usage](#suggested-usage). No orchestrator skill. |
 | `adr` | mattpocock `domain-modeling`. ShipYard `adr-index` keeps the candidate list, index, and back-links. |
-| `deepen-plan` | Removed. See [plan_review and deepen-plan](#plan_review-and-deepen-plan). |
-| `plan_review` | Removed. See [plan_review and deepen-plan](#plan_review-and-deepen-plan). |
+| `deepen-plan` | Removed. See [Why two plan skills were not adapted](#why-two-plan-skills-were-not-adapted). |
+| `plan_review` | Removed. See [Why two plan skills were not adapted](#why-two-plan-skills-were-not-adapted). |
 
-`batch-issues` and `git-worktree` were already missing from this tree. The skills that called them (`arch-flow`, `adr`, `review`) are gone. Tracker tickets come from `to-tickets`.
+`batch-issues` and `git-worktree` were already missing. The rows above that used to call them are gone. Tracker tickets come from `to-tickets`.
 
 ## What we kept from the old pipeline
 
 | Unique behavior | Where it lives now |
 |-----------------|--------------------|
 | Eight-category coverage scan, at most five questions, Clarifications section written back onto the draft | `clarify-coverage` |
-| Existing design doc or ADR → non-goals, success criteria, edge cases, at most three gap questions | `spec-from-doc` (a brief under `docs/spec-briefs/`, then `to-spec` publishes) |
-| Repo, best-practice, and framework research agents, plus spec-flow gap analysis | `ground-spec`, using the agents still under `plugins/Shipyard/agents/` |
+| Existing design doc or ADR → in-scope behavior, non-goals, success criteria, edge cases, at most three gap questions | `spec-from-doc` (a brief under `docs/spec-briefs/`, then `to-spec` publishes) |
+| Repo, best-practice, and framework research agents, plus spec-flow gap analysis | `ground-spec`, launching the plugin agents under `agents/` |
 | Phase table and `[PARALLEL]` tags | Not kept. `to-tickets` blocking edges are the parallel-work model. |
 | Decision candidates, `docs/adr/README.md`, back-links onto the source | `adr-index` |
 | Long ADR template and full spec template | Not kept. ADR prose follows `domain-modeling` `ADR-FORMAT.md`. Spec prose follows `to-spec`. |
 
-## plan_review and deepen-plan
+## Why two plan skills were not adapted
 
-Both skills assumed a ShipYard `docs/plans/` file and a roster of reviewers or researchers that was never wired to the agent files in this repo. `plan_review` named twelve reviewers; `agents/review/` had six prompt files, and the removed `review` skill did not load them by path. `deepen-plan` named twelve research roles; the real prompts are the three research agents `ground-spec` still launches, plus spec-flow.
+The last two rows of the replacement table were not turned into add-ons. Both assumed a local plan file and a roster of reviewers or researchers that was never wired to agent files. One named twelve reviewers while six prompt files existed, and the review row in the table did not load those files by path. The other named twelve research roles. The prompts that exist are the three research agents `ground-spec` launches, plus spec-flow.
 
-Adapting either skill onto tracker issues would duplicate companions that already exist:
+Adapting either onto tracker issues would duplicate companions that already exist:
 
 - Stress-testing a design is `grilling` / `grill-with-docs`.
 - Research on a large, foggy effort is `wayfinder` research tickets.
 - Reviewing a diff is waza `check`.
 
-They were removed. The research that was actually backed by prompt files moved into `ground-spec`, which runs before `to-spec` rather than after a local plan file.
+They were removed. Research backed by real prompt files moved into `ground-spec`, which runs before `to-spec` rather than after a local plan file.
 
 ## Skills in this plugin
 
