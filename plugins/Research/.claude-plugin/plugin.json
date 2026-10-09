@@ -1,0 +1,9 @@
+{
+  "name": "research",
+  "version": "1.0.0",
+  "description": "Scientific research workflows for designing, validating, and making decisions with LLM pretraining scaling ladders.",
+  "author": {
+    "name": "Shipyard",
+    "email": "heng.li@vita.cn"
+  }
+}

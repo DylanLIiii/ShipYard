@@ -126,6 +126,25 @@ Removed because nothing remaining loads them: `agents/core/general.md`, `agents/
 
 `/setup-matt-pocock-skills` has to run once on the target repo before step 6.
 
+## Research plugin
+
+The `research` plugin in `plugins/Research` supports LLM pretraining experiment design and review. It is separate from the Shipyard planning add-ons.
+
+- [`scientific-scaling-ladder`](plugins/Research/skills/scientific-scaling-ladder/SKILL.md) — turn small training runs into decisions about target recipe performance, compute allocation, candidate selection, and hyperparameter transfer
+- distinguish fixed-recipe prediction from decisions requiring a sufficiently tuned frontier
+- freeze evaluation and holdouts, propagate uncertainty to decisions, and validate extrapolation and production feasibility
+- use the [decision-record template](plugins/Research/skills/scientific-scaling-ladder/references/decision-record.md) for a reproducible handoff under `docs/research/`
+
+The skill condenses Jiaxuan Zou's [How to Build a Scientific Scaling Ladder](https://jiaxuanzou0714.github.io/blog/2026/how-to-build-scientific-scaling-ladder/), with links to supporting primary research. Published example sizes, thresholds, and hyperparameters are not universal defaults.
+
+Install from this repository and invoke in Claude Code:
+
+```text
+/plugin marketplace add DylanLIiii/ShipYard
+/plugin install research@Shipyard
+/research:scientific-scaling-ladder Design a ladder for comparing two pretraining recipes under a fixed compute budget.
+```
+
 ## What this repo contains
 
 ```text
@@ -135,6 +154,9 @@ ShipYard/
 │   ├── agents/          # research + spec-flow prompts used by ground-spec
 │   ├── skills/          # delivery skills and the four planning add-ons
 │   └── .mcp.json
+├── plugins/Research/    # plugin name: research
+│   ├── .claude-plugin/plugin.json
+│   └── skills/scientific-scaling-ladder/
 ├── CLAUDE.md
 └── README.md
 ```
@@ -163,6 +185,8 @@ Install the companions in [Companions](#companions) as well. ShipYard's planning
 Touchpoints:
 
 - `plugins/Shipyard/skills/*/SKILL.md`
+- `plugins/Research/skills/*/SKILL.md`
+- `plugins/Research/.claude-plugin/plugin.json`
 - `plugins/Shipyard/agents/**/*.md`
 - `.claude-plugin/marketplace.json`
 
